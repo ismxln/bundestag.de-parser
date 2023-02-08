@@ -1,20 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
 
-persons_links = []
+# with open('scrape learning/bundestag.de/persons_links.txt') as file:  # save links in new list and strip them to be sure
+#     lines = [line.strip() for line in file.readlines()]
 
-for i in range(0, 740, 20):
-    link = f'https://www.bundestag.de/ajax/filterlist/en/members/863330-863330?limit=20&noFilterSet=true&offset={i}'
+#     for line in lines:
+#         response = requests.get(line)
+#         soup = BeautifulSoup(response.content, 'lxml')
+#         # go to one of links in persons_links.txt, check how to get needed data
+#         person = soup.select('.bt-biografie-name h3').text  # col-xs-8 col-md-9 bt-biografie-name
+#         person_name_company = person.strip().split(',')  # example: Sanae Abdi, SPD
+#         person_name = person_name_company[0]
+#         person_company = person_name_company[1]
 
-    response = requests.get(url=link)
 
-    soup = BeautifulSoup(response.content, 'lxml')
-    persons = soup.find_all('a')
+response = requests.get('https://www.bundestag.de/en/members/abdi_sanae-861028')
+soup = BeautifulSoup(response.content, 'lxml')
+# go to one of links in persons_links.txt, check how to get needed data
+person = soup.find(class_='bt-biografie-name').find('h3').text  # col-xs-8 col-md-9 bt-biografie-name
+person_name_company = person.strip().split(',')  # example: Sanae Abdi, SPD
+person_name = person_name_company[0]
+person_company = person_name_company[1]
 
-    for person in persons:
-        persons_links.append(person['href'])
-
-# .txt file with person links
-with open('scrape learning/bundestag.de/persons_links.txt', 'a') as file:
-    for line in persons_links:
-        file.write(f'{line}\n')
+print(person_name, person_company)
