@@ -1,12 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from time import sleep
+import random
 
 if __name__ == '__main__':
-    with open('scrape learning/bundestag.de/persons_links.txt') as file:  # save links in new list and strip them to be sure
+    with open('persons_links.txt') as file:  # save links in new list and strip them to be sure
         links = [link.strip() for link in file.readlines()]
 
-        data_dict = {}
+        data_dict = []
 
         # creating counter
         count = 0
@@ -14,7 +16,7 @@ if __name__ == '__main__':
             response = requests.get(link)
             soup = BeautifulSoup(response.content, 'lxml')
             # go to one of links in persons_links.txt, check how to get needed data
-            person = soup.select('.bt-biografie-name h3').text  # col-xs-8 col-md-9 bt-biografie-name
+            person = soup.find(class_='bt-biografie-name').find('h3').text  # col-xs-8 col-md-9 bt-biografie-name
             person_name_company = person.strip().split(',')  # example: Sanae Abdi, SPD
             person_name = person_name_company[0]
             person_company = person_name_company[1].strip()
@@ -32,6 +34,7 @@ if __name__ == '__main__':
             }
 
             count += 1
+            sleep(random.randrange(2, 4))
             print(f'#{count}: {link} is done.')
 
             data_dict.append(data)
