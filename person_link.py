@@ -2,8 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-if __name__ == '__main__':
-
+def main():
     persons_links = []
 
     for i in range(0, 740, 20):
@@ -21,3 +20,7 @@ if __name__ == '__main__':
     with open('scrape learning/bundestag.de/persons_links.txt', 'a') as file:
         for line in persons_links:
             file.write(f'{line}\n')
+
+
+if __name__ == '__main__':
+    main()
